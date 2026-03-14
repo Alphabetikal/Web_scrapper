@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+      background:linear-gradient(135deg,#0d1b2a 0%,#1a2639 40%,#000000 100%);
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 20px;
+    }
+
+    input.url {
+      flex: 1 1 70%;
+      padding: 12px 15px;
+      border-radius: 15px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+
+    button {
+      flex: 1 1 25%;
+      padding: 12px;
+      border-radius: 15px;
+      border: none;
+      background-color: #0d1b2a;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #1a2639;
+    }
+
+    hr {
+      width: 80%;
+      margin: 20px 0;
+      border: none;
+      border-top: 1px solid #ccc;
+    }
+
+    .results {
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+      background-color: white;
+      word-wrap: break-word;
+      min-height: 100px;
+    }
+
+    @media (max-width: 480px) {
+      input.url, button {
+        flex: 1 1 100%;
+      }
+
+      .results {
+        padding: 15px;
+      }
+}
+     p{
+       color:white;
+       font-size:30px;
+       text-align:center;
+     }
+     .copy-btn {
+      position: absolute;
+      right: 27%;
+      top: 22%;
+      transform: translateY(-50%);
+      background-color: #1e3a8a;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 5px 10px;
+      transition: background 0.3s;
+    }
+  </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <p class="flash">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  <form method="POST" action="/search">
+    <input type="text" name="url" placeholder="Enter URL" class="url">
+    <button type="submit">Fetch</button>
+  </form>
+
+  <hr>
+     <button class="copy-btn" onclick="copyText()">📋</button>
+  <div class='results'>
+
+    {{ result }}
+  </div>
+<script>
+      function copyText() {
+        const resultsDiv=document.querySelector('.results');
+        const text=resultsDiv.innerText || resultsDiv.textContent;
+        
+        navigator.clipboard.writeText(text)
+        .then(()=>{
+          const btn=document.querySelector('.copy-btn');
+          const original=btn.textContent;
+          btn.textContent='copied';
+          setTimeout(()=>btn.textContent= original,1000);
+        })
+        .catch(()=>alert('Failed to copy'));
+        }
+
+  </script>
+</body>
+</html>
